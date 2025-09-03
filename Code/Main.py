@@ -24,7 +24,7 @@ def draw(window: pygame.Surface):
         shape.draw(window)
     pygame.display.update()
 
-def loop(window: pygame.Surface, width: int, height: int):
+def loop(window: pygame.Surface):
     run = True
     clock = pygame.time.Clock()
 
@@ -49,7 +49,7 @@ def main():
 
     window = pygame_init()
 
-    loop(window, WIDTH, HEIGHT)
+    loop(window)
 
     print("Closing application")
 
