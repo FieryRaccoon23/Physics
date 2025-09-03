@@ -3,13 +3,15 @@ from Shapes import SHAPES, Circle, Rectangle
 GRAVITY = 9.81        
 RESTITUTION = 0.5     # 0 = no bounce, 1 = perfectly bouncy
 red_circle = None
-radius = 50
+radius = 10
 
+# Called once
 def sim_init():
     global red_circle
     red_circle = Circle(200, 150, radius, 0, (255, 0, 0))
     red_circle.add_shape()
 
+# Updates every frame
 def sim_loop(dt_ms: int):
     global red_circle
 

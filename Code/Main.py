@@ -6,6 +6,11 @@ from Shapes import SHAPES, Circle, Rectangle
 import Sim
 
 # -------------------------
+# Debug Parameters
+# -------------------------
+SHOW_TEXT = True
+
+# -------------------------
 # Global Parameters
 # -------------------------
 WIDTH, HEIGHT = 1000, 800
@@ -18,6 +23,8 @@ FONT_TYPE = "Arial"
 # -------------------------
 # Main methods
 # -------------------------
+
+# Init pygame parameters
 def pygame_init()-> pygame.Surface:
     global FONT
     pygame.init()
@@ -25,13 +32,29 @@ def pygame_init()-> pygame.Surface:
     FONT = pygame.font.SysFont(FONT_TYPE, FONT_SIZE)
     return pygame.display.set_mode((WIDTH, HEIGHT))
 
+# Draw shapes and also text
 def main_draw(window: pygame.Surface):
     window.fill(BACKGROUND)
     for shape in SHAPES:
         shape.draw(window)
-        shape.display_text(window, FONT)
+        if SHOW_TEXT:
+            shape.display_text(window, FONT)
     pygame.display.update()
 
+# All pygame events are to be placed here
+def read_pygame_events(event: pygame.event) -> bool:
+    global SHOW_TEXT
+
+    if event.type == pygame.QUIT:
+                return False
+    
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_d: # D - Debug enable/disbale
+            SHOW_TEXT = not SHOW_TEXT
+    
+    return True
+
+# main loop of application
 def main_loop(window: pygame.Surface):
     run = True
     clock = pygame.time.Clock()
@@ -39,9 +62,7 @@ def main_loop(window: pygame.Surface):
     while run:
         # read events
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-                break
+            run = read_pygame_events(event)
         
         # frame rate
         dt_ms = clock.tick(FPS)
@@ -55,6 +76,7 @@ def main_loop(window: pygame.Surface):
 
     pygame.quit()
 
+# start here
 def main():
     print("Launching application...")
 
