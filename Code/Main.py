@@ -3,6 +3,7 @@ import pymunk
 import pymunk.pygame_util
 import math
 from Shapes import SHAPES, Circle, Rectangle
+import Sim
 
 # -------------------------
 # Global Parameters
@@ -10,21 +11,28 @@ from Shapes import SHAPES, Circle, Rectangle
 WIDTH, HEIGHT = 1000, 800
 FPS = 60
 BACKGROUND = "white"
+FONT = None
+FONT_SIZE = 10
+FONT_TYPE = "Arial"
 
 # -------------------------
 # Main methods
 # -------------------------
 def pygame_init()-> pygame.Surface:
+    global FONT
     pygame.init()
+    pygame.font.init()
+    FONT = pygame.font.SysFont(FONT_TYPE, FONT_SIZE)
     return pygame.display.set_mode((WIDTH, HEIGHT))
 
-def draw(window: pygame.Surface):
+def main_draw(window: pygame.Surface):
     window.fill(BACKGROUND)
     for shape in SHAPES:
         shape.draw(window)
+        shape.display_text(window, FONT)
     pygame.display.update()
 
-def loop(window: pygame.Surface):
+def main_loop(window: pygame.Surface):
     run = True
     clock = pygame.time.Clock()
 
@@ -36,10 +44,13 @@ def loop(window: pygame.Surface):
                 break
         
         # frame rate
-        dt = clock.tick(FPS)
+        dt_ms = clock.tick(FPS)
+
+        # simulate physics
+        Sim.sim_loop(dt_ms)
 
         # debug draw
-        draw(window)
+        main_draw(window)
 
 
     pygame.quit()
@@ -49,7 +60,9 @@ def main():
 
     window = pygame_init()
 
-    loop(window)
+    Sim.sim_init()
+
+    main_loop(window)
 
     print("Closing application")
 
