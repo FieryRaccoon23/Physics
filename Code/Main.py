@@ -9,6 +9,7 @@ import Sim
 # Debug Parameters
 # -------------------------
 SHOW_TEXT = True
+PAUSE = False
 
 # -------------------------
 # Global Parameters
@@ -44,12 +45,15 @@ def main_draw(window: pygame.Surface):
 # All pygame events are to be placed here
 def read_pygame_events(event: pygame.event) -> bool:
     global SHOW_TEXT
+    global PAUSE
 
     if event.type == pygame.QUIT:
                 return False
     
-    if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_d: # D - Debug enable/disbale
+    if event.type == pygame.KEYDOWN: 
+        if event.key == pygame.K_SPACE: # Space - Pause simulation
+            PAUSE = not PAUSE
+        if event.key == pygame.K_d: # D - Debug enable/disbale - NOTE inefficient as it will still loop through all objects
             SHOW_TEXT = not SHOW_TEXT
     
     return True
@@ -64,11 +68,11 @@ def main_loop(window: pygame.Surface):
         for event in pygame.event.get():
             run = read_pygame_events(event)
         
-        # frame rate
         dt_ms = clock.tick(FPS)
 
         # simulate physics
-        Sim.sim_loop(dt_ms)
+        if not PAUSE:
+            Sim.sim_loop(dt_ms)
 
         # debug draw
         main_draw(window)
