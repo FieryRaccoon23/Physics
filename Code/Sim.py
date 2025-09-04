@@ -37,9 +37,9 @@ def sim_init(window: pygame.Surface):
     # Init floor
     global Floor
     floor_mass = 1.0
-    Floor = Rectangle(300, 500, 300, 10, floor_mass, object_id, [0, 0, 255])
+    Floor = Rectangle(300, 500, 300, 10, floor_mass, object_id, [100, 200, 200])
     Floor.static_object = True
-    Floor.text_color = (0, 0, 255)
+    Floor.text_color = (100, 200, 200)
     Floor.angle = 0.0
     Floor.add_shape()
     PHYSICS_OBJECTS.append(Floor)
