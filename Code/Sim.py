@@ -1,6 +1,6 @@
 import pygame
 from enum import Enum
-import ParticleMergingSplitting
+import ParticleMergingSplitting.ParticleMergingSplitting as ParticleMergingSplitting
 
 class Project(Enum):
     ParticleMergingSplitting = 1
