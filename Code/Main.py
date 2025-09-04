@@ -4,6 +4,7 @@ import pymunk.pygame_util
 import math
 from Shapes import SHAPES, Circle, Rectangle
 import Sim
+import Inputs
 
 # -------------------------
 # Debug Parameters
@@ -51,9 +52,9 @@ def read_pygame_events(event: pygame.event) -> bool:
                 return False
     
     if event.type == pygame.KEYDOWN: 
-        if event.key == pygame.K_SPACE: # Space - Pause simulation
+        if event.key == Inputs.Pause: # Space - Pause simulation
             PAUSE = not PAUSE
-        if event.key == pygame.K_d: # D - Debug enable/disbale - NOTE inefficient as it will still loop through all objects
+        if event.key == Inputs.Debug: # D - Debug enable/disbale - NOTE inefficient as it will still loop through all objects
             SHOW_TEXT = not SHOW_TEXT
     
     return True
