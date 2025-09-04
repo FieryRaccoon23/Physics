@@ -22,6 +22,8 @@ class Shape(ABC):
         self.text_offset_y = 0
         self.text_color: tuple[int, int, int] = (0, 0, 0)
         self.static_object = False
+        self.angle: float = 0.0                 # degrees
+        self.surface: pygame.Surface | None = None
     
     @abstractmethod
     def draw(self, window: pygame.Surface) -> None:
@@ -62,5 +64,12 @@ class Rectangle(Shape):
         self.height = height
         self.color = color
 
+        # draw the rect once to an offscreen Surface so we can rotate it
+        self.surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA).convert_alpha()
+        pygame.draw.rect(self.surface, self.color, (0, 0, self.width, self.height))
+
     def draw(self, window: pygame.Surface) -> None:
-        pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height))
+        rotated = pygame.transform.rotate(self.surface, self.angle)
+        # center around geometric center (x + w/2, y + h/2) to preserve current top-left semantics
+        rect = rotated.get_rect(center=(self.x + self.width * 0.5, self.y + self.height * 0.5))
+        window.blit(rotated, rect.topleft)

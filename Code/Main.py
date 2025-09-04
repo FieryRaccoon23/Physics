@@ -52,9 +52,9 @@ def read_pygame_events(event: pygame.event) -> bool:
                 return False
     
     if event.type == pygame.KEYDOWN: 
-        if event.key == Inputs.Pause: # Space - Pause simulation
+        if event.key == Inputs.Pause:
             PAUSE = not PAUSE
-        if event.key == Inputs.Debug: # D - Debug enable/disbale - NOTE inefficient as it will still loop through all objects
+        if event.key == Inputs.Debug: # NOTE: inefficient as it will still loop through all objects
             SHOW_TEXT = not SHOW_TEXT
     
     return True

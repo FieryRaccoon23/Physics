@@ -34,6 +34,7 @@ def sim_init():
     Floor = Rectangle(300, 500, 300, 10, floor_mass, object_id, [0, 0, 255])
     Floor.static_object = True
     Floor.text_color = (0, 0, 255)
+    Floor.angle = 0.0
     Floor.add_shape()
     PHYSICS_OBJECTS.append(Floor)
 
