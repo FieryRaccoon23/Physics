@@ -1,5 +1,7 @@
 from Shapes import SHAPES, Shape, Circle, Rectangle
 import random
+import pygame
+import DebugShapes
 
 GRAVITY = 9.81        
 RESTITUTION = 0.5     # 0 = no bounce, 1 = perfectly bouncy
@@ -7,9 +9,13 @@ PHYSICS_OBJECTS: list["Shape"] = []
 RADIUS = 10
 
 Floor = None
+Window = None
 
 # Called once
-def sim_init():
+def sim_init(window: pygame.Surface):
+    global Window
+    Window = window
+
     # Init circles
     count = 10
     x_value = 50
@@ -55,3 +61,7 @@ def sim_loop(dt_ms: int):
     for obj in PHYSICS_OBJECTS:
         apply_gravity(dt, obj)
         show_debug(obj)
+
+# Update every frame for debug displaying
+def sim_debug_display():
+    pass

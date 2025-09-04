@@ -5,11 +5,12 @@ import math
 from Shapes import SHAPES, Circle, Rectangle
 import Sim
 import Inputs
+import DebugShapes
 
 # -------------------------
 # Debug Parameters
 # -------------------------
-SHOW_TEXT = True
+SHOW_DEBUG_DETAILS = True
 PAUSE = False
 
 # -------------------------
@@ -34,18 +35,43 @@ def pygame_init()-> pygame.Surface:
     FONT = pygame.font.SysFont(FONT_TYPE, FONT_SIZE)
     return pygame.display.set_mode((WIDTH, HEIGHT))
 
+# Draw Axes
+def draw_axes(window: pygame.Surface):
+    origin = (5,5)
+    axis_length = 50
+    x_axis = (axis_length,origin[0])
+    y_axis = (origin[1],axis_length)
+    offset = 5
+
+    # X axis
+    DebugShapes.draw_arrow(window, (0,255,0), origin, x_axis, 1, 5)
+    text = FONT.render("X", True, (0,255,0))
+    window.blit(text, (int(x_axis[0] + offset), int(x_axis[1] - offset)))
+
+    # Y axis
+    DebugShapes.draw_arrow(window, (0,0,255), origin, y_axis, 1, 5)
+    text = FONT.render("Y", True, (0,0,255))
+    window.blit(text, (int(y_axis[0] + offset), int(y_axis[1] - offset)))
+
 # Draw shapes and also text
 def main_draw(window: pygame.Surface):
     window.fill(BACKGROUND)
+
+    draw_axes(window)
+
     for shape in SHAPES:
         shape.draw(window)
-        if SHOW_TEXT:
+        if SHOW_DEBUG_DETAILS:
             shape.display_text(window, FONT)
+
+    if SHOW_DEBUG_DETAILS:
+         Sim.sim_debug_display()
+
     pygame.display.update()
 
 # All pygame events are to be placed here
 def read_pygame_events(event: pygame.event) -> bool:
-    global SHOW_TEXT
+    global SHOW_DEBUG_DETAILS
     global PAUSE
 
     if event.type == pygame.QUIT:
@@ -55,7 +81,7 @@ def read_pygame_events(event: pygame.event) -> bool:
         if event.key == Inputs.Pause:
             PAUSE = not PAUSE
         if event.key == Inputs.Debug: # NOTE: inefficient as it will still loop through all objects
-            SHOW_TEXT = not SHOW_TEXT
+            SHOW_DEBUG_DETAILS = not SHOW_DEBUG_DETAILS
     
     return True
 
@@ -87,7 +113,7 @@ def main():
 
     window = pygame_init()
 
-    Sim.sim_init()
+    Sim.sim_init(window)
 
     main_loop(window)
 
