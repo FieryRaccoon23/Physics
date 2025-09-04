@@ -10,16 +10,18 @@ SHAPES: list["Shape"] = []
 # Base class
 # -------------------------
 class Shape(ABC):
-    def __init__(self, x: int, y: int, id: int):
+    def __init__(self, x: int, y: int, mass: float, id: int):
         self.x = x
         self.y = y
         self.vx = 0.0
         self.vy = 0.0
+        self.mass = mass
         self.id = id
         self.text = ""
         self.text_offset_x = 0
         self.text_offset_y = 0
         self.text_color: tuple[int, int, int] = (0, 0, 0)
+        self.static_object = False
     
     @abstractmethod
     def draw(self, window: pygame.Surface) -> None:
@@ -42,8 +44,8 @@ class Shape(ABC):
 # Circle class
 # -------------------------
 class Circle(Shape):
-    def __init__(self, x: int, y: int, radius: int, id: int, color: tuple[int, int, int]):
-        super().__init__(x, y, id)
+    def __init__(self, x: int, y: int, radius: int, mass: int, id: int, color: tuple[int, int, int]):
+        super().__init__(x, y, mass, id)
         self.radius = radius
         self.color = color
 
@@ -54,8 +56,8 @@ class Circle(Shape):
 # Rectangle class
 # -------------------------
 class Rectangle(Shape):
-    def __init__(self, x: int, y: int, width: int, height: int, id: int, color: tuple[int, int, int]):
-        super().__init__(x, y, id)
+    def __init__(self, x: int, y: int, width: int, height: int, mass: int, id: int, color: tuple[int, int, int]):
+        super().__init__(x, y, mass, id)
         self.width = width
         self.height = height
         self.color = color
