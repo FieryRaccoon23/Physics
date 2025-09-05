@@ -6,6 +6,7 @@ from Shapes import SHAPES, Circle, Rectangle
 import Sim
 import Inputs
 import DebugShapes
+import Util
 
 # -------------------------
 # Debug Parameters
@@ -39,8 +40,8 @@ def pygame_init()-> pygame.Surface:
 def draw_axes(window: pygame.Surface):
     origin = (5,5)
     axis_length = 50
-    x_axis = (axis_length,origin[0])
-    y_axis = (origin[1],axis_length)
+    x_axis = origin + (axis_length * Util.X_AXIS)
+    y_axis = origin + (axis_length * Util.Y_AXIS)
     offset = 5
 
     # X axis

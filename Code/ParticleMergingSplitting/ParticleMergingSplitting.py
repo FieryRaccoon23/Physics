@@ -27,7 +27,7 @@ def init(window: pygame.Surface):
         y = random.randint(50, 100)
 
         circle_mass = 1.0
-        c = Circle(x, y, RADIUS, circle_mass, object_id, (255, 0, 0))
+        c = Circle(pygame.math.Vector2(x,y), RADIUS, circle_mass, object_id, (255, 0, 0))
         object_id += 1
         c.add_shape()
         c.text_color = (255, 0, 0)            
@@ -37,22 +37,22 @@ def init(window: pygame.Surface):
     # Init floor
     global Floor
     floor_mass = 1.0
-    Floor = Rectangle(300, 500, 300, 10, floor_mass, object_id, [100, 200, 200])
+    angle = 0.0
+    Floor = Rectangle(pygame.math.Vector2(300.0, 500.0), 300, 10, floor_mass, object_id, angle, [100, 200, 200])
     Floor.static_object = True
     Floor.text_color = (100, 200, 200)
-    Floor.angle = 0.0
     Floor.add_shape()
     PHYSICS_OBJECTS.append(Floor)
 
 # Debug
 def show_debug(object: Shape):
-    object.set_text(f"id: {object.id}, vx: {object.vx:.1f}, vy: {object.vy:.1f}", RADIUS, RADIUS, object.text_color)
+    object.set_text(f"id: {object.id}, vx: {object.vel.x:.1f}, vy: {object.vel.y:.1f}", RADIUS, RADIUS, object.text_color)
 
 # Gravity
 def apply_gravity(dt: int, object: Shape):
     if not object.static_object:
-        object.vy += GRAVITY * dt
-        object.y += object.vy * dt
+        object.vel.y += GRAVITY * dt
+        object.pos.y += object.vel.y * dt
 
 # Updates every frame
 def loop(dt_ms: int):
@@ -64,4 +64,6 @@ def loop(dt_ms: int):
 
 # Update every frame for debug displaying
 def debug_display():
-    pass
+    arrow_length = 50.0
+    DebugShapes.draw_arrow(Window, (255,0,0), Floor.pos, Floor.pos + (arrow_length * Floor.get_x_axis_local()), 1, 5)
+    DebugShapes.draw_arrow(Window, (200,200,50), Floor.pos, Floor.pos + (arrow_length * Floor.get_y_axis_local()), 1, 5)
