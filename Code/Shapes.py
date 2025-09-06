@@ -47,19 +47,21 @@ class Shape(ABC):
 # Circle class
 # -------------------------
 class Circle(Shape):
-    def __init__(self, pos: pygame.math.Vector2, radius: int, mass: int, id: int, color: tuple[int, int, int]):
+    def __init__(self, pos: pygame.math.Vector2, radius: float, mass: float, id: int, color: tuple[int, int, int]):
         super().__init__(pos, mass, id)
         self.radius = radius
         self.color = color
+        self.radius_sqr = radius * radius
 
     def draw(self, window: pygame.Surface) -> None:
         pygame.draw.circle(window, self.color, (self.pos.x, self.pos.y), self.radius)
 
 # -------------------------
 # Rectangle class
+# width = x axis & height = y axis
 # -------------------------
 class Rectangle(Shape):
-    def __init__(self, pos: pygame.math.Vector2, width: int, height: int, mass: int, id: int, angle: float, color: tuple[int, int, int]):
+    def __init__(self, pos: pygame.math.Vector2, width: int, height: int, mass: float, id: int, angle: float, color: tuple[int, int, int]):
         super().__init__(pos, mass, id, angle)
         self.width = width
         self.height = height

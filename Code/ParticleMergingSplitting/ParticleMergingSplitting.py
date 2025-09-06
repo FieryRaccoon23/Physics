@@ -2,11 +2,12 @@ from Shapes import SHAPES, Shape, Circle, Rectangle
 import random
 import pygame
 import DebugShapes
+import Collision
 
 GRAVITY = 9.81        
-RESTITUTION = 0.5     # 0 = no bounce, 1 = perfectly bouncy
+RESTITUTION = 0.0     # 0 = no bounce, 1 = perfectly bouncy
 PHYSICS_OBJECTS: list["Shape"] = []
-RADIUS = 10
+RADIUS = 10.0
 
 Floor = None
 Window = None
@@ -15,16 +16,17 @@ Window = None
 def init(window: pygame.Surface):
     global Window
     Window = window
+    Collision.init(window)
 
     # Init circles
-    count = 10
-    x_value = 50
+    count = 1
+    x_value = 180
     x_offset = 60
     object_id = 0
     for _ in range(count):
         x = x_value
-        x_value += (2* RADIUS) + x_offset
-        y = random.randint(50, 100)
+        #x_value += (2* RADIUS) + x_offset
+        y = 50 #random.randint(50, 100)
 
         circle_mass = 1.0
         c = Circle(pygame.math.Vector2(x,y), RADIUS, circle_mass, object_id, (255, 0, 0))
@@ -36,8 +38,8 @@ def init(window: pygame.Surface):
 
     # Init floor
     global Floor
-    floor_mass = 1.0
-    angle = 0.0
+    floor_mass = 0.0
+    angle = 30.0
     Floor = Rectangle(pygame.math.Vector2(300.0, 500.0), 300, 10, floor_mass, object_id, angle, [100, 200, 200])
     Floor.static_object = True
     Floor.text_color = (100, 200, 200)
@@ -46,7 +48,7 @@ def init(window: pygame.Surface):
 
 # Debug
 def show_debug(object: Shape):
-    object.set_text(f"id: {object.id}, vx: {object.vel.x:.1f}, vy: {object.vel.y:.1f}", RADIUS, RADIUS, object.text_color)
+    object.set_text(f"id: {object.id}, x: {object.pos.x:.1f}, y: {object.pos.y:.1f}", RADIUS, RADIUS, object.text_color)
 
 # Gravity
 def apply_gravity(dt: int, object: Shape):
@@ -60,6 +62,10 @@ def loop(dt_ms: int):
 
     for obj in PHYSICS_OBJECTS:
         apply_gravity(dt, obj)
+
+    Collision.resolve_collisions(PHYSICS_OBJECTS, RESTITUTION)
+
+    for obj in PHYSICS_OBJECTS:
         show_debug(obj)
 
 # Update every frame for debug displaying
@@ -67,3 +73,8 @@ def debug_display():
     arrow_length = 50.0
     DebugShapes.draw_arrow(Window, (255,0,0), Floor.pos, Floor.pos + (arrow_length * Floor.get_x_axis_local()), 1, 5)
     DebugShapes.draw_arrow(Window, (200,200,50), Floor.pos, Floor.pos + (arrow_length * Floor.get_y_axis_local()), 1, 5)
+
+    # c = Circle(pygame.math.Vector2(184.337,555.231), 5.0, 1.0, 11, (0, 255, 0))
+    # c.add_shape()
+
+    Collision.debug_display()

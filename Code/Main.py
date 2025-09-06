@@ -13,6 +13,7 @@ import Util
 # -------------------------
 SHOW_DEBUG_DETAILS = True
 PAUSE = False
+STEPPING = False
 
 # -------------------------
 # Global Parameters
@@ -74,6 +75,7 @@ def main_draw(window: pygame.Surface):
 def read_pygame_events(event: pygame.event) -> bool:
     global SHOW_DEBUG_DETAILS
     global PAUSE
+    global STEPPING
 
     if event.type == pygame.QUIT:
                 return False
@@ -83,11 +85,15 @@ def read_pygame_events(event: pygame.event) -> bool:
             PAUSE = not PAUSE
         if event.key == Inputs.Debug: # NOTE: inefficient as it will still loop through all objects
             SHOW_DEBUG_DETAILS = not SHOW_DEBUG_DETAILS
+        if event.key == Inputs.Step:
+             STEPPING = True
     
     return True
 
 # main loop of application
 def main_loop(window: pygame.Surface):
+    global STEPPING
+    
     run = True
     clock = pygame.time.Clock()
 
@@ -99,8 +105,10 @@ def main_loop(window: pygame.Surface):
         dt_ms = clock.tick(FPS)
 
         # simulate physics
-        if not PAUSE:
+        if (not PAUSE) or (PAUSE and STEPPING) :
             Sim.sim_loop(dt_ms)
+
+        STEPPING = False
 
         # debug draw
         main_draw(window)
