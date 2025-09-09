@@ -14,7 +14,7 @@ SHAPES: list["Shape"] = []
 class Shape(ABC):
     def __init__(self, pos: pygame.math.Vector2, mass: float, id: int, angle: float = 0.0):
         self.pos = pos
-        self.vel = Util.ZERO_VECTOR
+        self.vel = Util.ZERO_VECTOR.copy()
         self.mass = mass
         self.id = id
         self.text = ""

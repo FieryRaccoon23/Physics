@@ -3,9 +3,9 @@ import random
 import pygame
 import DebugShapes
 import Collision
-
-GRAVITY = 9.81        
-RESTITUTION = 0.0     # 0 = no bounce, 1 = perfectly bouncy
+import BasicForces
+       
+RESTITUTION = 0.4     # 0 = no bounce, 1 = perfectly bouncy
 PHYSICS_OBJECTS: list["Shape"] = []
 RADIUS = 10.0
 
@@ -48,20 +48,16 @@ def init(window: pygame.Surface):
 
 # Debug
 def show_debug(object: Shape):
-    object.set_text(f"id: {object.id}, x: {object.pos.x:.1f}, y: {object.pos.y:.1f}", RADIUS, RADIUS, object.text_color)
-
-# Gravity
-def apply_gravity(dt: int, object: Shape):
-    if not object.static_object:
-        object.vel.y += GRAVITY * dt
-        object.pos.y += object.vel.y * dt
+    object.set_text(f"id: {object.id}, x: {object.pos.x:.1f}, y: {object.pos.y:.1f}, vx: {object.vel.x:.1f}, vy: {object.vel.y:.1f}", RADIUS, RADIUS, object.text_color)
 
 # Updates every frame
 def loop(dt_ms: int):
     dt = dt_ms / 1000.0
 
     for obj in PHYSICS_OBJECTS:
-        apply_gravity(dt, obj)
+        BasicForces.apply_gravity(dt, obj)
+
+        BasicForces.integrate_position(dt, obj)
 
     Collision.resolve_collisions(PHYSICS_OBJECTS, RESTITUTION)
 

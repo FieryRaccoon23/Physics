@@ -5,6 +5,7 @@ from typing import List, Tuple, Union
 from Shapes import Shape, Circle, Rectangle
 import Util
 import DebugShapes
+import BasicForces
 
 EPS = 1e-8
 POS_CORRECT_PERCENT = 0.8   # 0..1: how aggressively to un-penetrate
@@ -12,8 +13,8 @@ POS_CORRECT_SLOP = 0.01     # small allowed overlap
 
 Window = None
 
-N_POS = Util.ZERO_VECTOR
-N_VEC = Util.ZERO_VECTOR
+N_POS = Util.ZERO_VECTOR.copy()
+N_VEC = Util.ZERO_VECTOR.copy()
 
 def init(window: pygame.Surface) -> None:
     global Window
@@ -38,26 +39,6 @@ def positional_correction(a: Shape, b: Shape, normal: pygame.math.Vector2, penet
         a.pos += correction * invA
     if invB > 0.0:
         b.pos -= correction * invB
-
-def resolve_impulse(a: Shape, b: Shape, normal: Vector2, restitution: float) -> None:
-    invA = inv_mass(a)
-    invB = inv_mass(b)
-
-    # Relative velocity along normal
-    rv = a.vel - b.vel
-    vel_along_normal = Util.dot(rv, normal)
-
-    j = -(1.0 + restitution) * vel_along_normal
-    denom = invA + invB
-    if denom <= EPS:
-        return
-    j /= denom
-
-    impulse = j * normal
-    if invA > 0.0:
-        a.vel += impulse * invA
-    if invB > 0.0:
-        b.vel -= impulse * invB
 
 # -------------------------
 # Circle vs Oriented Rectangle (OBB)
@@ -111,13 +92,9 @@ def collide_circle_rect_obb(c: Circle, r: Rectangle, restitution: float) -> None
         penetration_amount = c.radius - normal_vec_len
         N_VEC = normal_vec
         N_POS = closest_point
-        print("Is Colliding")
-        print("DistanceX: " + str(dist_x))
-        print("DistanceY: " + str(dist_y))
-        print("Normal vector length: " + str(normal_vec_len))
         positional_correction(c, r, normal_vec, penetration_amount)
-
-
+        BasicForces.apply_impulse(normal_vec, c, restitution, inv_mass(c))
+        BasicForces.apply_impulse(normal_vec, r, restitution, inv_mass(r))
 
 # -------------------------
 # Public: resolve all collisions among objects

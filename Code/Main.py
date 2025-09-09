@@ -41,8 +41,8 @@ def pygame_init()-> pygame.Surface:
 def draw_axes(window: pygame.Surface):
     origin = (5,5)
     axis_length = 50
-    x_axis = origin + (axis_length * Util.X_AXIS)
-    y_axis = origin + (axis_length * Util.Y_AXIS)
+    x_axis = origin + (axis_length * Util.X_AXIS.copy())
+    y_axis = origin + (axis_length * Util.Y_AXIS.copy())
     offset = 5
 
     # X axis

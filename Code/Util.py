@@ -20,7 +20,7 @@ def length(v: pygame.math.Vector2) -> float:
 def normalize(v: pygame.math.Vector2) -> pygame.math.Vector2:
     d = length(v)
     if d == 0.0:
-        return ZERO_VECTOR
+        return ZERO_VECTOR.copy()
     return pygame.math.Vector2(v.x/d, v.y/d)
 
 def dot(a: pygame.math.Vector2, b: pygame.math.Vector2) -> float:
