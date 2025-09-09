@@ -70,7 +70,6 @@ def debug_display():
     DebugShapes.draw_arrow(Window, (255,0,0), Floor.pos, Floor.pos + (arrow_length * Floor.get_x_axis_local()), 1, 5)
     DebugShapes.draw_arrow(Window, (200,200,50), Floor.pos, Floor.pos + (arrow_length * Floor.get_y_axis_local()), 1, 5)
 
-    # c = Circle(pygame.math.Vector2(184.337,555.231), 5.0, 1.0, 11, (0, 255, 0))
-    # c.add_shape()
-
-    Collision.debug_display()
+    for obj in PHYSICS_OBJECTS:
+        if obj.is_in_contact:
+            DebugShapes.draw_arrow(Window, (0,0,255), obj.contact_point, obj.contact_point + (arrow_length * obj.contact_normal), 1, 5)

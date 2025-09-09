@@ -13,9 +13,6 @@ POS_CORRECT_SLOP = 0.01     # small allowed overlap
 
 Window = None
 
-N_POS = Util.ZERO_VECTOR.copy()
-N_VEC = Util.ZERO_VECTOR.copy()
-
 def init(window: pygame.Surface) -> None:
     global Window
     Window = window
@@ -86,15 +83,20 @@ def collide_circle_rect_obb(c: Circle, r: Rectangle, restitution: float) -> None
 
     is_penetrating = (normal_vec_len < c.radius)
 
-    global N_VEC
-    global N_POS
     if is_penetrating:
         penetration_amount = c.radius - normal_vec_len
-        N_VEC = normal_vec
-        N_POS = closest_point
+        c.contact_normal = normal_vec
+        r.contact_normal = -normal_vec
+        c.contact_point = closest_point
+        r.contact_point = closest_point
+        c.is_in_contact = True
+        r.is_in_contact = True
         positional_correction(c, r, normal_vec, penetration_amount)
         BasicForces.apply_impulse(normal_vec, c, restitution, inv_mass(c))
         BasicForces.apply_impulse(normal_vec, r, restitution, inv_mass(r))
+    else:
+        c.is_in_contact = False
+        r.is_in_contact = False
 
 # -------------------------
 # Public: resolve all collisions among objects
@@ -120,7 +122,3 @@ def resolve_collisions(objects: List[Shape], restitution: float = 0.5) -> None:
         #     B = objects[j]
         #     if isinstance(A, Circle) and isinstance(B, Circle):
         #         _collide_circle_circle(A, B, restitution)
-
-def debug_display():
-    arrow_length = 50.0
-    DebugShapes.draw_arrow(Window, (0,0,255), N_POS, N_POS + (arrow_length * N_VEC), 1, 5)

@@ -25,6 +25,9 @@ class Shape(ABC):
         self.angle: float = angle
         self.angle_previous: float = 0.0
         self.surface: pygame.Surface | None = None
+        self.contact_normal = Util.ZERO_VECTOR.copy()
+        self.contact_point = Util.ZERO_VECTOR.copy()
+        self.is_in_contact = False
     
     @abstractmethod
     def draw(self, window: pygame.Surface) -> None:
